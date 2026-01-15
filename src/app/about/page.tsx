@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 
-export default function Home() {
+
+export default function About() {
   return (
     <div>
-      <h1>Welcome to My Next.js App</h1>
+      <h1>About Page</h1>
       <Button>Click ME</Button>
     </div>
   );
