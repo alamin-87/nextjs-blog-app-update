@@ -1,53 +1,408 @@
 # Next.js Blog Application
 
-A modern, feature-rich blogging platform built with Next.js, React, TypeScript, and Tailwind CSS. This application provides a comprehensive blogging experience with role-based dashboard systems, advanced routing, and responsive UI components.
+A modern, feature-rich blogging platform built with **Next.js 16**, **React 19**, **TypeScript**, and **Tailwind CSS**. This application provides a comprehensive blogging experience with role-based dashboard systems, advanced routing, and responsive UI components powered by shadcn/ui.
 
-##  Features
+## 📚 Table of Contents
+
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Installation](#installation)
+- [Getting Started](#getting-started)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [API Integration](#api-integration)
+- [Authentication](#authentication)
+- [Components](#components)
+- [Styling](#styling)
+- [Contributing](#contributing)
+
+## ✨ Features
 
 ### Core Features
-- **Blog Management**: Create, read, and manage blog posts
-- **User Authentication**: Login and registration system
-- **Dark Mode Support**: Theme switching with light/dark mode
+- **Blog Management**: Create, read, update, and manage blog posts
+- **User Authentication**: Login and registration system with role-based access control
+- **Dark Mode Support**: Theme switching with light/dark mode using next-themes
 - **Responsive Design**: Mobile-friendly interface with adaptive layouts
-- **Advanced Routing**: Nested routing with parallel routes and layout groups
+- **Advanced Routing**: Next.js 16 App Router with nested routing, parallel routes, and layout groups
+- **Type-Safe**: Full TypeScript support with Zod validation
 
 ### User Roles & Dashboards
-- **Admin Dashboard**: Admin-specific features and controls
-- **User Dashboard**: User-specific features and analytics
-- **Analytics**: View dashboard analytics with monthly and weekly data
-- **Write Blog**: Dedicated section for creating new blog posts
+- **Admin Dashboard**: Admin-specific features and controls (`@admin` parallel route)
+- **User Dashboard**: User-specific features including:
+  - Dashboard overview with analytics
+  - Create new blog posts
+  - View blog post history
+  - Pagination controls for managing content
+- **Responsive Layouts**: Different layouts for different user roles and pages
 
 ### Pages & Sections
-- **Blog Listing**: Browse all available blog posts
+- **Home Page**: Featured posts showcase and recent blog listings
+- **Blog Listing**: Browse all available blog posts with featured posts section
 - **About Page**: Learn more about the platform
-- **Contact Page**: Contact information with branch details
-- **Error Handling**: Custom error pages and loading states
+- **Contact Page**: Contact information with branch details and layout variations
+- **Authentication Pages**: Login and registration pages
+- **Error Handling**: Custom error pages and loading states with skeleton loaders
 
-##  Project Structure
+## 🛠️ Tech Stack
 
-\\\
+### Frontend Framework
+- **Next.js 16.1.1** - React framework with app router
+- **React 19.2.3** - UI library
+- **TypeScript 5** - Type safety
+- **Tailwind CSS 4** - Utility-first CSS framework
+
+### UI Components & Styling
+- **shadcn/ui** - High-quality React components
+- **Radix UI** - Primitive components for accessibility
+  - Accordion, Aspect Ratio, Dialog, Dropdown Menu, Label, Navigation Menu, Separator, Slot, Tooltip
+- **Lucide React 0.562.0** - Icon library
+- **class-variance-authority** - CSS class utilities
+- **tailwind-merge** - Merge Tailwind CSS classes
+
+### Authentication & Forms
+- **better-auth 1.4.16** - Authentication library
+- **TanStack React Form 1.27.7** - Form state management
+- **Zod 4.3.6** - TypeScript-first schema validation
+
+### Utilities
+- **next-themes 0.4.6** - Theme management
+- **Sonner 2.0.7** - Toast notifications
+- **Sharp 0.34.5** - Image optimization
+- **clsx 2.1.1** - Class name utility
+
+### Development Tools
+- **ESLint 9** - Code linting
+- **Tailwind CSS PostCSS 4** - CSS processing
+
+## 📁 Project Structure
+
+```
 src/
- app/                           # Next.js app directory
-    (commonLayout)/            # Common layout group
-       about/                 # About page
-       blogs/                 # Blog listing page
-       login/                 # Login page
-       register/              # Registration page
-    (dashboardLayout)/         # Dashboard layout with parallel routes
-       @admin/                # Admin dashboard slot
-       @user/                 # User dashboard slot
-       dashboard/             # Dashboard with analytics
-    (practice)/                # Practice layout with marketing & sales slots
-       @marketingSlot/
-       @salesSlot/
-       development/
-    contact/                   # Contact section
-    layout.tsx                 # Root layout
- components/
-    layouts/                   # Layout components
-       Navbar.tsx            # Navigation bar
-       app-sidebar.tsx       # Application sidebar
-       ModeToggle.tsx        # Theme toggle component
+├── actions/                    # Server actions
+│   └── post.action.ts         # Post-related server actions
+│
+├── app/                        # Next.js App Router
+│   ├── globals.css            # Global styles
+│   ├── layout.tsx             # Root layout
+│   ├── not-found.tsx          # 404 error page
+│   │
+│   ├── (commonLayout)/        # Layout group for common pages
+│   │   ├── layout.tsx         # Common layout wrapper
+│   │   ├── page.tsx           # Home page
+│   │   ├── about/             # About page
+│   │   │   ├── error.tsx      # Error boundary
+│   │   │   ├── loading.tsx    # Loading state
+│   │   │   └── page.tsx
+│   │   ├── blogs/             # Blog listing
+│   │   │   ├── page.tsx       # All blogs page
+│   │   │   └── [id]/          # Dynamic blog post page
+│   │   │       └── page.tsx
+│   │   ├── login/             # Login page
+│   │   └── signup/            # Registration page
+│   │
+│   ├── (dashboardLayout)/     # Dashboard layout with parallel routes
+│   │   ├── layout.tsx         # Dashboard wrapper layout
+│   │   ├── default.tsx        # Default fallback
+│   │   │
+│   │   ├── @admin/            # Admin slot (parallel route)
+│   │   │   ├── default.tsx
+│   │   │   └── admin-dashboard/
+│   │   │       └── page.tsx   # Admin dashboard
+│   │   │
+│   │   └── @user/             # User slot (parallel route)
+│   │       ├── default.tsx
+│   │       └── dashboard/
+│   │           ├── page.tsx   # User dashboard
+│   │           ├── create-blog/
+│   │           │   └── page.tsx  # Create blog post
+│   │           └── history/
+│   │               └── page.tsx  # Blog post history
+│   │
+│   ├── (practice)/            # Practice layout with marketing & sales slots
+│   │   ├── layout.tsx
+│   │   ├── default.tsx
+│   │   │
+│   │   ├── @marketingSlot/    # Marketing parallel route
+│   │   │   ├── default.tsx
+│   │   │   └── marketing/
+│   │   │       ├── page.tsx
+│   │   │       └── settings/
+│   │   │           └── page.tsx
+│   │   │
+│   │   ├── @salesSlot/        # Sales parallel route
+│   │   │   ├── default.tsx
+│   │   │   └── sales/
+│   │   │       └── page.tsx
+│   │   │
+│   │   ├── development/
+│   │   └── testing/
+│   │
+│   └── contact/               # Contact section
+│       ├── layout.tsx
+│       ├── page.tsx           # Contact page
+│       └── branch/            # Branch page
+│           └── page.tsx
+│
+├── components/                # Reusable React components
+│   ├── layouts/              # Layout components
+│   │   ├── Navbar.tsx        # Navigation bar
+│   │   ├── app-sidebar.tsx   # Application sidebar
+│   │   ├── ModeToggle.tsx    # Dark/light theme toggle
+│   │   ├── search-form.tsx   # Search input form
+│   │   └── version-switcher.tsx
+│   │
+│   ├── modules/              # Feature-specific components
+│   │   ├── authentication/
+│   │   │   ├── login-form.tsx      # Login form component
+│   │   │   └── signup-form.tsx     # Signup form component
+│   │   │
+│   │   ├── homepage/
+│   │   │   └── PostCard.tsx        # Blog post card display
+│   │   │
+│   │   └── user/
+│   │       ├── createBlog/
+│   │       │   ├── CreateBlogFormClient.tsx   # Client-side form
+│   │       │   └── createBlogFormServer.tsx   # Server-side form
+│   │       └── history/
+│   │           └── HistoryTable.tsx           # History table display
+│   │
+│   └── ui/                   # shadcn/ui components
+│       ├── accordion.tsx
+│       ├── aspect-ratio.tsx
+│       ├── badge.tsx
+│       ├── breadcrumb.tsx
+│       ├── button.tsx
+│       ├── card.tsx
+│       ├── dropdown-menu.tsx
+│       ├── field.tsx
+│       ├── input.tsx
+│       ├── label.tsx
+│       ├── navigation-menu.tsx
+│       ├── pagination.tsx
+│       ├── pagination-controls.tsx  # Custom pagination controls
+│       ├── separator.tsx
+│       ├── sheet.tsx
+│       ├── sidebar.tsx
+│       ├── skeleton.tsx
+│       ├── sonner.tsx
+│       ├── table.tsx
+│       ├── textarea.tsx
+│       └── tooltip.tsx
+│
+├── constance/                # Constants and enums
+│   └── role.ts              # User role definitions
+│
+├── hooks/                   # Custom React hooks
+│   └── use-mobile.ts        # Mobile detection hook
+│
+├── lib/                     # Utility libraries
+│   ├── auth-client.ts       # Client-side auth utilities
+│   └── utils.ts             # Common utility functions
+│
+├── providers/               # React context providers
+│   └── ThemeProvider.tsx    # Theme provider setup
+│
+├── routes/                  # Route definitions
+│   ├── adminRoute.ts        # Admin routes
+│   └── userRoute.ts         # User routes
+│
+├── services/                # API service layer
+│   ├── post.service.ts      # Blog post API calls
+│   └── user.service.ts      # User API calls
+│
+├── types/                   # TypeScript type definitions
+│   ├── index.ts            # Exported types
+│   ├── post.type.ts        # Post-related types
+│   └── route.type.ts       # Route-related types
+│
+└── env.ts                   # Environment variable configuration
+```
+
+## 🚀 Installation
+
+### Prerequisites
+- Node.js 18+ or 20+
+- npm or yarn package manager
+- Git
+
+### Clone & Setup
+```bash
+# Clone the repository
+git clone <repository-url>
+cd nextjs-app
+
+# Install dependencies
+npm install
+# or
+yarn install
+
+# Create .env.local file for environment variables
+cp .env.example .env.local
+```
+
+## 🏃 Getting Started
+
+### Development Server
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) to see your app.
+
+### Production Build
+```bash
+npm run build
+npm start
+# or
+yarn build
+yarn start
+```
+
+### Linting
+```bash
+npm run lint
+# or
+yarn lint
+```
+
+## ⚙️ Configuration
+
+### Environment Variables
+Create a `.env.local` file in the root directory:
+
+```env
+# API Configuration
+NEXT_PUBLIC_API_URL=http://localhost:3000/api
+
+# Authentication (if using external auth)
+NEXT_PUBLIC_AUTH_URL=http://localhost:3000
+
+# Database (if applicable)
+DATABASE_URL=postgresql://user:password@localhost:5432/blog_db
+```
+
+### Tailwind CSS Configuration
+Tailwind CSS 4 is configured via `postcss.config.mjs`. Customize in `globals.css`.
+
+### Theme Configuration
+Dark/light theme switching is enabled via `next-themes`. Configure in [providers/ThemeProvider.tsx](src/providers/ThemeProvider.tsx).
+
+## 📝 Usage
+
+### Creating a Blog Post
+1. Navigate to Dashboard → Create Blog
+2. Fill in the title, content, and tags
+3. Click "Publish" to create the post
+4. View all your posts in Dashboard → History
+
+### User Authentication
+- **Login**: Visit `/login`
+- **Register**: Visit `/signup`
+- Role-based access control restricts admin features to authorized users
+
+### Navigation Structure
+- **Home**: `/` (Featured posts and recent blog listings)
+- **Blog Listing**: `/blogs`
+- **Blog Detail**: `/blogs/[id]`
+- **About**: `/about`
+- **Contact**: `/contact`
+- **User Dashboard**: `/dashboard` (requires authentication)
+- **Create Blog**: `/dashboard/create-blog`
+- **Post History**: `/dashboard/history`
+- **Admin Dashboard**: `/admin-dashboard` (admin only)
+
+## 🔌 API Integration
+
+The application uses `postService` and `userService` for API calls:
+
+### Post Service
+```typescript
+// Get posts with pagination
+await postService.getPostService({
+  page: "1",
+  limit: "10",
+  isFeatured: true,
+  search: "query"
+});
+
+// Service located in src/services/post.service.ts
+```
+
+### User Service
+```typescript
+// User-related operations
+// Service located in src/services/user.service.ts
+```
+
+## 🔐 Authentication
+
+- Uses `better-auth` for authentication
+- Client-side auth utilities in [lib/auth-client.ts](src/lib/auth-client.ts)
+- Role-based access control with Admin and User roles
+- Protected routes via middleware
+
+## 🎨 Components
+
+### UI Components
+All components are from shadcn/ui and fully customizable. Located in [src/components/ui/](src/components/ui/):
+- Button, Input, Textarea, Label
+- Card, Badge, Separator
+- Table, Pagination, Skeleton
+- Dialog, Dropdown Menu, Tooltip
+- And more...
+
+### Custom Components
+- **PostCard**: Display individual blog post preview
+- **HistoryTable**: Paginated table of user's blog posts
+- **CreateBlogFormClient/Server**: Blog creation forms
+- **Navbar**: Navigation header
+- **ModeToggle**: Theme switcher
+
+## 🎯 Styling
+
+- **Tailwind CSS 4** for utility-first styling
+- **CSS Modules** for component-scoped styles
+- **Dark mode** support with next-themes
+- Responsive design with mobile-first approach
+- Animation support via tailwind
+
+## 📦 Key Dependencies
+
+| Package | Version | Purpose |
+|---------|---------|---------|
+| next | 16.1.1 | React framework |
+| react | 19.2.3 | UI library |
+| typescript | 5 | Type safety |
+| tailwindcss | 4 | CSS framework |
+| zod | 4.3.6 | Schema validation |
+| better-auth | 1.4.16 | Authentication |
+| next-themes | 0.4.6 | Theme management |
+| sonner | 2.0.7 | Toast notifications |
+| lucide-react | 0.562.0 | Icons |
+
+## 🤝 Contributing
+
+1. Create a feature branch (`git checkout -b feature/amazing-feature`)
+2. Commit changes (`git commit -m 'Add amazing feature'`)
+3. Push to branch (`git push origin feature/amazing-feature`)
+4. Open a Pull Request
+
+## 📄 License
+
+This project is private and proprietary.
+
+## 👨‍💻 Support
+
+For issues and questions, please contact the development team or check the project documentation.
+
+---
+
+**Last Updated**: January 2026
+**Next.js Version**: 16.1.1
+**React Version**: 19.2.3
        search-form.tsx       # Search functionality
        version-switcher.tsx  # Version selector
     ui/                        # Reusable UI components
